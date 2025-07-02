@@ -1,4 +1,5 @@
 
+
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   ConnectionProvider,
@@ -9,20 +10,15 @@ import {
   WalletModalProvider,
   WalletMultiButton
 } from '@solana/wallet-adapter-react-ui';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { Connection, PublicKey } from '@solana/web3.js';
 import {
-  PhantomWalletAdapter
-} from '@solana/wallet-adapter-wallets';
-import {
-  Connection,
-  PublicKey
-} from '@solana/web3.js';
-import {
-  getAssociatedTokenAddress,
+  getAssociatedTokenAddressSync,
   getAccount
 } from '@solana/spl-token';
 import '@solana/wallet-adapter-react-ui/styles.css';
 
-const FLUF_TOKEN_MINT = 'xOw36LBCliJQj5OONV6q7r2H';
+const FLUF_TOKEN_MINT = 'xOw36LBCliJQj5OONV6q7r2H'; // Replace with real token mint if needed
 
 const TokenBalance = () => {
   const { publicKey, connected } = useWallet();
@@ -34,7 +30,7 @@ const TokenBalance = () => {
       try {
         const connection = new Connection('https://api.mainnet-beta.solana.com');
         const tokenMint = new PublicKey(FLUF_TOKEN_MINT);
-        const ata = await getAssociatedTokenAddress(tokenMint, publicKey);
+        const ata = getAssociatedTokenAddressSync(tokenMint, publicKey);
         const tokenAccount = await getAccount(connection, ata);
         setBalance(Number(tokenAccount.amount) / 1e9);
       } catch (err) {
@@ -65,6 +61,7 @@ const App = () => {
             <a href="#roadmap">Roadmap</a>
             <a href="#tokenomics">Tokenomics</a>
           </nav>
+
           <section id="hero" style={{ marginTop: '60px', textAlign: 'center' }}>
             <h1>🚀 FluffInu (FLUF)</h1>
             <WalletMultiButton />
@@ -73,10 +70,15 @@ const App = () => {
               Token Mint: <code>{FLUF_TOKEN_MINT}</code>
             </p>
           </section>
+
           <section id="about">
             <h2>🐶 About FluffInu</h2>
-            <p>FluffInu is the softest bark in the blockchain! Born on Solana, FLUF is a meme-powered token built for fun, community, and a little bit of chaos.</p>
+            <p>
+              FluffInu is the softest bark in the blockchain! Born on Solana, FLUF is a meme-powered token
+              built for fun, community, and a little bit of chaos.
+            </p>
           </section>
+
           <section id="roadmap">
             <h2>🛣 Roadmap</h2>
             <ul>
@@ -87,6 +89,7 @@ const App = () => {
               <li>📈 CEX listings</li>
             </ul>
           </section>
+
           <section id="tokenomics">
             <h2>📊 Tokenomics</h2>
             <ul>
